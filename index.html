@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sintético de Tasa — Letra Dólar Linked + Futuro ROFEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal: #003138;
+    --gold: #d4a93a;
+    --bg: #f7f3ea;
+    --card: #fffdf8;
+    --border: rgba(0,49,56,0.14);
+    --text: #14282b;
+    --text-soft: #5a6b6d;
+    --green: #1f7a4d;
+    --green-bg: #eaf5ef;
+    --red: #b03a2e;
+    --red-bg: #fbeceA;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+  }
+
+  body{
+    padding: 36px 24px 56px;
+  }
+
+  .wrap{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header.app-header{
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  header.app-header h1{
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--teal);
+    margin: 0 0 8px;
+    letter-spacing: 0.2px;
+  }
+
+  header.app-header .rule{
+    width: 64px;
+    height: 2px;
+    background: var(--gold);
+    margin: 14px auto;
+  }
+
+  header.app-header p{
+    font-size: 15px;
+    color: var(--text-soft);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .layout{
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .layout > *{ min-width: 0; }
+
+  .results-col{
+    position: sticky;
+    top: 24px;
+  }
+
+  @media (max-width: 980px){
+    .layout{ grid-template-columns: minmax(0, 1fr); }
+    .results-col{ position: static; }
+  }
+
+  .panel{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px 24px;
+  }
+
+  .panel + .panel{
+    margin-top: 18px;
+  }
+
+  .panel h2{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--teal);
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field{
+    margin-bottom: 16px;
+  }
+
+  .field:last-child{ margin-bottom: 0; }
+
+  .field label{
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  .field .hint{
+    font-size: 12px;
+    color: var(--text-soft);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .field-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .field-row + .field-row,
+  .field-row + .field,
+  .field + .field-row{
+    margin-top: 16px;
+  }
+
+  .field-row > .field{ margin-bottom: 0; }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select{
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 10px 12px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  input:focus, select:focus{
+    border-color: var(--gold);
+  }
+
+  input[readonly]{
+    background: #f2f0e8;
+    color: var(--text-soft);
+    cursor: not-allowed;
+  }
+
+  input:disabled{
+    background: #f2f0e8;
+    color: #a3a9a9;
+    cursor: not-allowed;
+    border-color: var(--border);
+  }
+
+  .segmented{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: #f0ece0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 20px;
+  }
+
+  .seg-btn{
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 10px 8px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--text-soft);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .seg-btn.active{
+    background: var(--teal);
+    color: #fdf6e3;
+  }
+
+  .seg-btn:not(.active):hover{
+    color: var(--teal);
+  }
+
+  #camposCierre{
+    border-top: 1px dashed var(--border);
+    margin-top: 4px;
+    padding-top: 16px;
+  }
+
+  .hidden{ display: none !important; }
+
+  /* Results */
+  .kpi-grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  @media (min-width: 981px) and (max-width: 1080px){
+    .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 560px){
+    .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  .kpi-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 16px 10px 15px;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .kpi-card .kpi-label{
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-soft);
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kpi-card .kpi-value{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--teal);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .verdict-card{
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 26px 24px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .verdict-card.positive{
+    background: var(--green-bg);
+    border-color: rgba(31,122,77,0.3);
+  }
+
+  .verdict-card.negative{
+    background: var(--red-bg);
+    border-color: rgba(176,58,46,0.3);
+  }
+
+  .verdict-card .verdict-label{
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .verdict-card.positive .verdict-label{ color: var(--green); }
+  .verdict-card.negative .verdict-label{ color: var(--red); }
+
+  .verdict-card .verdict-pnl{
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(30px, 5vw, 44px);
+    margin-bottom: 10px;
+  }
+
+  .verdict-card.positive .verdict-pnl{ color: var(--green); }
+  .verdict-card.negative .verdict-pnl{ color: var(--red); }
+
+  .verdict-card .verdict-note{
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  table.breakdown{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  table.breakdown th{
+    text-align: left;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-soft);
+    font-weight: 700;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.breakdown th.num, table.breakdown td.num{ text-align: right; }
+
+  table.breakdown td.num{
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  table.breakdown td{
+    padding: 11px 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  table.breakdown tr:last-child td{
+    border-bottom: none;
+  }
+
+  table.breakdown tr.highlight td{
+    background: rgba(212,169,58,0.14);
+    font-weight: 700;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--teal);
+  }
+
+  .message-banner{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 14px;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  /* Estado inicial: se muestra sólo cuando no hay resultados ni mensajes visibles */
+  .empty-state{ display: none; }
+
+  #resultsArea.hidden + #messageArea.hidden + .empty-state{ display: block; }
+
+  .kpi-grid.ghost .kpi-card{
+    border-top-color: var(--border);
+  }
+
+  .kpi-grid.ghost .kpi-value{
+    color: rgba(0,49,56,0.28);
+  }
+
+  .empty-panel{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 44px 32px;
+    text-align: center;
+  }
+
+  .empty-panel .empty-rule{
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 18px;
+  }
+
+  .empty-panel h3{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 21px;
+    color: var(--teal);
+    margin: 0 0 10px;
+  }
+
+  .empty-panel p{
+    font-size: 14px;
+    color: var(--text-soft);
+    font-weight: 500;
+    line-height: 1.55;
+    margin: 0 auto;
+    max-width: 360px;
+  }
+
+  .empty-steps{
+    list-style: none;
+    padding: 0;
+    margin: 26px auto 0;
+    max-width: 340px;
+    text-align: left;
+    border-top: 1px solid var(--border);
+  }
+
+  .empty-steps li{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 2px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .empty-steps li span{
+    flex: 0 0 auto;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--gold);
+    width: 18px;
+  }
+
+  .footnote{
+    margin-top: 28px;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  @media (max-width: 560px){
+    body{ padding: 24px 16px 40px; }
+    header.app-header{ margin-bottom: 22px; }
+    .panel{ padding: 18px 16px 20px; }
+    .field-row{ grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .field-row > .field + .field{ margin-top: 16px; }
+    .kpi-card .kpi-value{ font-size: 20px; }
+    .verdict-card{ padding: 22px 16px; }
+    .empty-panel{ padding: 32px 18px; }
+    table.breakdown td, table.breakdown th{ padding-left: 6px; padding-right: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-header">
+    <h1>Sintético de Tasa</h1>
+    <div class="rule"></div>
+    <p>Letra dólar linked + futuro de dólar ROFEX</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- INPUTS -->
+    <div>
+      <div class="panel">
+        <h2>Apertura</h2>
+
+        <div class="field">
+          <label for="instrumento">Letra dólar linked</label>
+          <select id="instrumento">
+            <option value="D30S6">D30S6 — Vto. 30/09/2026</option>
+            <option value="D30O6">D30O6 — Vto. 30/10/2026</option>
+            <option value="D30N6">D30N6 — Vto. 30/11/2026</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="precioCompraBono">Precio compra bono</label>
+            <input type="number" id="precioCompraBono" step="0.001" placeholder="c/ 100 VN">
+          </div>
+          <div class="field">
+            <label for="precioVentaFuturo">Precio venta futuro</label>
+            <input type="number" id="precioVentaFuturo" step="0.01" placeholder="$/USD">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="fechaOperacion">Fecha de operación</label>
+            <input type="date" id="fechaOperacion">
+          </div>
+          <div class="field">
+            <label for="vencimiento">Vencimiento</label>
+            <input type="date" id="vencimiento" readonly>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="vn">VN a operar (nominal USD)</label>
+          <input type="number" id="vn" step="1" placeholder="Ej: 10000">
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Gastos</h2>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="ddmBonoPct">DDM bono por pata (%)</label>
+            <input type="number" id="ddmBonoPct" step="0.0001" value="0.001">
+          </div>
+          <div class="field">
+            <label for="ddmFuturoPct">DDM futuro por pata (%)</label>
+            <input type="number" id="ddmFuturoPct" step="0.001" value="0.02">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="tnaCaucionPct">TNA caución (%)</label>
+          <input type="number" id="tnaCaucionPct" step="0.01" value="0">
+          <span class="hint">Solo aplica si el trade se mantiene a vencimiento.</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Modo del trade</h2>
+
+        <div class="segmented" id="modoToggle">
+          <button type="button" class="seg-btn active" data-modo="vencimiento">Mantener a vencimiento</button>
+          <button type="button" class="seg-btn" data-modo="cierre">Cerrar anticipadamente</button>
+        </div>
+
+        <div id="camposCierre" class="hidden">
+          <div class="field">
+            <label for="fechaCierre">Fecha de cierre</label>
+            <input type="date" id="fechaCierre">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="precioVentaBonoCierre">Precio venta bono (cierre)</label>
+              <input type="number" id="precioVentaBonoCierre" step="0.001" placeholder="c/ 100 VN">
+            </div>
+            <div class="field">
+              <label for="precioRecompraFuturoCierre">Precio recompra futuro (cierre)</label>
+              <input type="number" id="precioRecompraFuturoCierre" step="0.01" placeholder="$/USD">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-col">
+      <div id="resultsArea">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Días de tenencia</div>
+            <div class="kpi-value" id="kpiDias">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TEM</div>
+            <div class="kpi-value" id="kpiTem">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TNA</div>
+            <div class="kpi-value" id="kpiTna">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TEA</div>
+            <div class="kpi-value" id="kpiTea">—</div>
+          </div>
+        </div>
+
+        <div class="verdict-card" id="verdictCard">
+          <div class="verdict-label" id="verdictLabel">Resultado</div>
+          <div class="verdict-pnl" id="verdictPnl">—</div>
+          <div class="verdict-note" id="verdictNote"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Desglose</h2>
+          <table class="breakdown" id="breakdownTable">
+            <thead>
+              <tr><th>Concepto</th><th class="num">Importe</th></tr>
+            </thead>
+            <tbody id="breakdownBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="messageArea" class="message-banner hidden"></div>
+
+      <div class="empty-state" aria-live="polite">
+        <div class="kpi-grid ghost" aria-hidden="true">
+          <div class="kpi-card">
+            <div class="kpi-label">Días de tenencia</div>
+            <div class="kpi-value">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TEM</div>
+            <div class="kpi-value">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TNA</div>
+            <div class="kpi-value">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">TEA</div>
+            <div class="kpi-value">—</div>
+          </div>
+        </div>
+
+        <div class="empty-panel">
+          <div class="empty-rule"></div>
+          <h3>Resultado del sintético</h3>
+          <p>Completá los datos para ver el resultado del sintético.</p>
+          <ul class="empty-steps">
+            <li><span>1</span>Precio de compra del bono</li>
+            <li><span>2</span>Precio de venta del futuro</li>
+            <li><span>3</span>Fecha de operación y VN a operar</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footnote">Herramienta de cálculo para uso interno de mesa. Los precios de referencia deben validarse contra la pizarra en vivo.</div>
+</div>
+
+<script>
+(function(){
+
+  // ---------- Configuración de instrumentos ----------
+  var INSTRUMENTS = {
+    D30S6: { vencimiento: '2026-09-30', precioRef: 150400 },
+    D30O6: { vencimiento: '2026-10-30', precioRef: 149950 },
+    D30N6: { vencimiento: '2026-11-30', precioRef: null }
+  };
+
+  var state = { modo: 'vencimiento' };
+
+  // ---------- DOM refs ----------
+  var el = {
+    instrumento: document.getElementById('instrumento'),
+    precioCompraBono: document.getElementById('precioCompraBono'),
+    precioVentaFuturo: document.getElementById('precioVentaFuturo'),
+    fechaOperacion: document.getElementById('fechaOperacion'),
+    vencimiento: document.getElementById('vencimiento'),
+    vn: document.getElementById('vn'),
+    ddmBonoPct: document.getElementById('ddmBonoPct'),
+    ddmFuturoPct: document.getElementById('ddmFuturoPct'),
+    tnaCaucionPct: document.getElementById('tnaCaucionPct'),
+    modoToggle: document.getElementById('modoToggle'),
+    camposCierre: document.getElementById('camposCierre'),
+    fechaCierre: document.getElementById('fechaCierre'),
+    precioVentaBonoCierre: document.getElementById('precioVentaBonoCierre'),
+    precioRecompraFuturoCierre: document.getElementById('precioRecompraFuturoCierre'),
+    resultsArea: document.getElementById('resultsArea'),
+    messageArea: document.getElementById('messageArea'),
+    kpiDias: document.getElementById('kpiDias'),
+    kpiTem: document.getElementById('kpiTem'),
+    kpiTna: document.getElementById('kpiTna'),
+    kpiTea: document.getElementById('kpiTea'),
+    verdictCard: document.getElementById('verdictCard'),
+    verdictLabel: document.getElementById('verdictLabel'),
+    verdictPnl: document.getElementById('verdictPnl'),
+    verdictNote: document.getElementById('verdictNote'),
+    breakdownBody: document.getElementById('breakdownBody')
+  };
+
+  // ---------- Utilidades de formato ----------
+  function fmtMoney(n){
+    var sign = n < 0 ? '-' : '';
+    return sign + '$' + Math.abs(n).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function fmtPercent(decimal, decimals){
+    decimals = decimals === undefined ? 2 : decimals;
+    return (decimal * 100).toLocaleString('es-AR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + '%';
+  }
+
+  function fmtDias(n){
+    return n.toLocaleString('es-AR');
+  }
+
+  // ---------- Utilidades de fecha (evitando corrimiento de timezone) ----------
+  function parseDateUTC(str){
+    if (!str) return null;
+    var parts = str.split('-');
+    if (parts.length !== 3) return null;
+    var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+    if (!y || !m || !d) return null;
+    return Date.UTC(y, m - 1, d);
+  }
+
+  function daysBetween(startMs, endMs){
+    return Math.round((endMs - startMs) / 86400000);
+  }
+
+  function todayStr(){
+    var d = new Date();
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  // ---------- Parsing de inputs numéricos ----------
+  function parseNum(raw){
+    if (raw === '' || raw === null || raw === undefined) return NaN;
+    var n = parseFloat(raw);
+    return isFinite(n) ? n : NaN;
+  }
+
+  function parsePercentInput(raw){
+    var n = parseNum(raw);
+    if (isNaN(n)) return NaN;
+    return n / 100;
+  }
+
+  function isPositive(n){
+    return isFinite(n) && n > 0;
+  }
+
+  // ---------- Instrumento: autocompletar vencimiento y precio ----------
+  function applyInstrument(){
+    var code = el.instrumento.value;
+    var config = INSTRUMENTS[code];
+    if (!config) return;
+    el.vencimiento.value = config.vencimiento;
+    if (config.precioRef !== null){
+      el.precioCompraBono.value = config.precioRef;
+    } else {
+      el.precioCompraBono.value = '';
+    }
+  }
+
+  // ---------- Toggle de modo ----------
+  function setModo(modo){
+    state.modo = modo;
+    var btns = el.modoToggle.querySelectorAll('.seg-btn');
+    btns.forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-modo') === modo);
+    });
+    if (modo === 'cierre'){
+      el.camposCierre.classList.remove('hidden');
+      el.tnaCaucionPct.disabled = true;
+    } else {
+      el.camposCierre.classList.add('hidden');
+      el.tnaCaucionPct.disabled = false;
+    }
+    recalculate();
+  }
+
+  // ---------- Lectura y validación de valores ----------
+  function readValues(){
+    return {
+      precioCompraBono: parseNum(el.precioCompraBono.value),
+      precioVentaFuturo: parseNum(el.precioVentaFuturo.value),
+      fechaOperacion: parseDateUTC(el.fechaOperacion.value),
+      vencimiento: parseDateUTC(el.vencimiento.value),
+      vn: parseNum(el.vn.value),
+      ddmBono: parsePercentInput(el.ddmBonoPct.value),
+      ddmFuturoPata: parsePercentInput(el.ddmFuturoPct.value),
+      tnaCaucion: parsePercentInput(el.tnaCaucionPct.value),
+      fechaCierre: parseDateUTC(el.fechaCierre.value),
+      precioVentaBonoCierre: parseNum(el.precioVentaBonoCierre.value),
+      precioRecompraFuturoCierre: parseNum(el.precioRecompraFuturoCierre.value)
+    };
+  }
+
+  function isComplete(v, modo){
+    var base = isPositive(v.vn) &&
+      isPositive(v.precioCompraBono) &&
+      isPositive(v.precioVentaFuturo) &&
+      v.fechaOperacion !== null &&
+      v.vencimiento !== null &&
+      isFinite(v.ddmBono) &&
+      isFinite(v.ddmFuturoPata);
+
+    if (!base) return false;
+
+    if (modo === 'vencimiento'){
+      return isFinite(v.tnaCaucion);
+    }
+
+    return v.fechaCierre !== null &&
+      isPositive(v.precioVentaBonoCierre) &&
+      isPositive(v.precioRecompraFuturoCierre);
+  }
+
+  // ---------- Cálculo financiero ----------
+  function calcMantenimiento(v){
+    var inversion = v.vn * v.precioCompraBono / 100;
+    var dias = daysBetween(v.fechaOperacion, v.vencimiento);
+    var cobro = v.vn * v.precioVentaFuturo;
+    var costoBono = v.ddmBono * inversion * 2;
+    var costoFuturo = v.vn * v.precioVentaFuturo * v.ddmFuturoPata * 2;
+    var costoCaucion = inversion * v.tnaCaucion * (dias / 365);
+    var pnl = cobro - inversion - costoBono - costoFuturo - costoCaucion;
+    return {
+      inversion: inversion, dias: dias, cobro: cobro,
+      costoBono: costoBono, costoFuturo: costoFuturo, costoCaucion: costoCaucion,
+      pnl: pnl
+    };
+  }
+
+  function calcCierreAnticipado(v){
+    var inversion = v.vn * v.precioCompraBono / 100;
+    var dias = daysBetween(v.fechaOperacion, v.fechaCierre);
+    var intradia = dias === 0;
+    var ingresoBono = v.vn * v.precioVentaBonoCierre / 100;
+    var pnlFuturo = (v.precioVentaFuturo - v.precioRecompraFuturoCierre) * v.vn;
+    var notionalApertura = v.vn * v.precioVentaFuturo;
+    var notionalCierre = v.vn * v.precioRecompraFuturoCierre;
+    var costoBono = v.ddmBono * inversion + v.ddmBono * ingresoBono;
+    var costoFuturo;
+    if (intradia){
+      costoFuturo = v.ddmFuturoPata * Math.max(notionalApertura, notionalCierre);
+    } else {
+      costoFuturo = v.ddmFuturoPata * notionalApertura + v.ddmFuturoPata * notionalCierre;
+    }
+    var pnl = (ingresoBono - inversion) + pnlFuturo - costoBono - costoFuturo;
+    return {
+      inversion: inversion, dias: dias, intradia: intradia,
+      ingresoBono: ingresoBono, pnlFuturo: pnlFuturo,
+      costoBono: costoBono, costoFuturo: costoFuturo,
+      pnl: pnl
+    };
+  }
+
+  function calcTasas(pnl, inversion, dias){
+    var tem = pnl / inversion;
+    if (dias === 0){
+      return { tem: tem, tna: null, tea: null, intradia: true };
+    }
+    var tna = tem * (365 / dias);
+    var tea = Math.pow(1 + tem, 365 / dias) - 1;
+    return { tem: tem, tna: tna, tea: tea, intradia: false };
+  }
+
+  // ---------- Renderizado ----------
+  function showMessage(text){
+    el.resultsArea.classList.add('hidden');
+    el.messageArea.classList.remove('hidden');
+    el.messageArea.textContent = text;
+  }
+
+  function showResults(){
+    el.resultsArea.classList.remove('hidden');
+    el.messageArea.classList.add('hidden');
+  }
+
+  function renderKpis(dias, tasas){
+    el.kpiDias.textContent = fmtDias(dias);
+    el.kpiTem.textContent = fmtPercent(tasas.tem, 3);
+    el.kpiTna.textContent = tasas.intradia ? 'N/A (intradía)' : fmtPercent(tasas.tna, 2);
+    el.kpiTea.textContent = tasas.intradia ? 'N/A (intradía)' : fmtPercent(tasas.tea, 2);
+  }
+
+  function renderVerdict(pnl, tasas){
+    var positive = pnl >= 0;
+    el.verdictCard.classList.toggle('positive', positive);
+    el.verdictCard.classList.toggle('negative', !positive);
+    el.verdictLabel.textContent = positive ? 'Resultado positivo' : 'Resultado negativo';
+    el.verdictPnl.textContent = fmtMoney(pnl);
+    if (tasas.intradia){
+      el.verdictNote.textContent = 'Operación intradía: TNA y TEA no aplican.';
+    } else {
+      el.verdictNote.textContent = 'Equivale a una TNA de ' + fmtPercent(tasas.tna, 2) + '.';
+    }
+  }
+
+  function renderBreakdownRow(label, value, highlight){
+    var tr = document.createElement('tr');
+    if (highlight) tr.classList.add('highlight');
+    var tdLabel = document.createElement('td');
+    tdLabel.textContent = label;
+    var tdValue = document.createElement('td');
+    tdValue.classList.add('num');
+    tdValue.textContent = fmtMoney(value);
+    tr.appendChild(tdLabel);
+    tr.appendChild(tdValue);
+    return tr;
+  }
+
+  function renderBreakdownMantenimiento(r){
+    el.breakdownBody.innerHTML = '';
+    el.breakdownBody.appendChild(renderBreakdownRow('Inversión inicial', r.inversion));
+    el.breakdownBody.appendChild(renderBreakdownRow('Cobro sintético a vencimiento', r.cobro));
+    el.breakdownBody.appendChild(renderBreakdownRow('DDM bono', -r.costoBono));
+    el.breakdownBody.appendChild(renderBreakdownRow('DDM futuro', -r.costoFuturo));
+    el.breakdownBody.appendChild(renderBreakdownRow('Costo caución', -r.costoCaucion));
+    el.breakdownBody.appendChild(renderBreakdownRow('PnL neto', r.pnl, true));
+  }
+
+  function renderBreakdownCierre(r){
+    el.breakdownBody.innerHTML = '';
+    el.breakdownBody.appendChild(renderBreakdownRow('Inversión inicial', r.inversion));
+    el.breakdownBody.appendChild(renderBreakdownRow('Ingreso venta bono', r.ingresoBono));
+    el.breakdownBody.appendChild(renderBreakdownRow('Resultado del bono', r.ingresoBono - r.inversion));
+    el.breakdownBody.appendChild(renderBreakdownRow('PnL futuro', r.pnlFuturo));
+    el.breakdownBody.appendChild(renderBreakdownRow('DDM bono', -r.costoBono));
+    el.breakdownBody.appendChild(renderBreakdownRow('DDM futuro', -r.costoFuturo));
+    el.breakdownBody.appendChild(renderBreakdownRow('PnL neto', r.pnl, true));
+  }
+
+  // ---------- Orquestación ----------
+  function recalculate(){
+    var v = readValues();
+    var modo = state.modo;
+
+    if (!isComplete(v, modo)){
+      el.resultsArea.classList.add('hidden');
+      el.messageArea.classList.add('hidden');
+      return;
+    }
+
+    if (v.fechaOperacion > v.vencimiento){
+      showMessage('La fecha de operación no puede ser posterior al vencimiento del instrumento.');
+      return;
+    }
+
+    if (modo === 'cierre'){
+      if (v.fechaCierre < v.fechaOperacion){
+        showMessage('La fecha de cierre no puede ser anterior a la fecha de operación.');
+        return;
+      }
+      if (v.fechaCierre > v.vencimiento){
+        showMessage('La fecha de cierre no puede ser posterior al vencimiento del instrumento.');
+        return;
+      }
+    }
+
+    var r, tasas;
+
+    if (modo === 'vencimiento'){
+      r = calcMantenimiento(v);
+      if (!isPositive(r.inversion)){
+        el.resultsArea.classList.add('hidden');
+        el.messageArea.classList.add('hidden');
+        return;
+      }
+      tasas = calcTasas(r.pnl, r.inversion, r.dias);
+      showResults();
+      renderKpis(r.dias, tasas);
+      renderVerdict(r.pnl, tasas);
+      renderBreakdownMantenimiento(r);
+    } else {
+      r = calcCierreAnticipado(v);
+      if (!isPositive(r.inversion)){
+        el.resultsArea.classList.add('hidden');
+        el.messageArea.classList.add('hidden');
+        return;
+      }
+      tasas = calcTasas(r.pnl, r.inversion, r.dias);
+      showResults();
+      renderKpis(r.dias, tasas);
+      renderVerdict(r.pnl, tasas);
+      renderBreakdownCierre(r);
+    }
+  }
+
+  // ---------- Inicialización ----------
+  function init(){
+    el.fechaOperacion.value = todayStr();
+    applyInstrument();
+
+    el.instrumento.addEventListener('change', function(){
+      applyInstrument();
+      recalculate();
+    });
+
+    el.modoToggle.querySelectorAll('.seg-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        setModo(btn.getAttribute('data-modo'));
+      });
+    });
+
+    var watchedInputs = [
+      el.precioCompraBono, el.precioVentaFuturo, el.fechaOperacion, el.vn,
+      el.ddmBonoPct, el.ddmFuturoPct, el.tnaCaucionPct,
+      el.fechaCierre, el.precioVentaBonoCierre, el.precioRecompraFuturoCierre
+    ];
+    watchedInputs.forEach(function(input){
+      input.addEventListener('input', recalculate);
+      input.addEventListener('change', recalculate);
+    });
+
+    recalculate();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
